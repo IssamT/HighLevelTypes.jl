@@ -1,13 +1,21 @@
 module HighLevelTypes
-export @hl #, @hldbg
+
+export @hl, @perf_hl, tuplejoin
 
 const _hl_types = Dict{Symbol, Tuple}()
+
+@inline tuplejoin(x) = x
+@inline tuplejoin(x::Tuple, y::Tuple) = (x..., y...)
+@inline tuplejoin(x::Tuple, y) = (x..., y)
+@inline tuplejoin(x, y::Tuple) = (x, y...)
+@inline tuplejoin(x,y) = (x,y)
+@inline tuplejoin(x, y, z...) = (x..., tuplejoin(y, z...)...)
 
 function maketypesconcrete(expression)
     for (i,arg) in enumerate(expression.args)
         if isa(arg, Symbol) 
             if haskey(_hl_types, arg)
-                expression.args[i] = Symbol("", arg)
+                expression.args[i] = Symbol("_", arg)
             end
         elseif :args in fieldnames(arg)
             maketypesconcrete(arg)
@@ -15,12 +23,24 @@ function maketypesconcrete(expression)
     end
 end
 
+#uses abstract types of attribute fields
 macro hl(typeexpr::Expr)
-    @assert typeexpr.head == :type
-    
-    mutable, nameblock, args = typeexpr.args                
-    maketypesconcrete(args)    
-    
+    @assert typeexpr.head == :type    
+    mutable, nameblock, args = typeexpr.args                        
+    createhltype(nameblock, args)           
+end
+
+#uses concrete types of attribute fields
+macro perf_hl(typeexpr::Expr)
+    @assert typeexpr.head == :type    
+    mutable, nameblock, args = typeexpr.args    
+    maketypesconcrete(args)     
+    createhltype(nameblock, args)           
+end
+
+
+
+function createhltype(nameblock, args)
     if !isa(nameblock, Symbol) && nameblock.head == :<:        
         parentname = nameblock.args[2]
         nameblock = nameblock.args[1]        
@@ -50,9 +70,12 @@ macro hl(typeexpr::Expr)
         type $tname <: $name
             $(_hl_types[name][2].args...)
         end
-        $name(args...) = $(Symbol("_",name))(args...)
+        $(Symbol(name,"Builder"))(args...) = args
+        $name(args...) = $(Symbol("_",name))($(Symbol(name,"Builder"))(args...)...)
+        # $name(args...) = $(Symbol("_",name))(args...)
     end 
-    esc(code)
+    # @show code
+    esc(code) 
 end
  
 end # module
