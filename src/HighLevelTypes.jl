@@ -4,12 +4,13 @@ export @hl, @perf_hl, tuplejoin
 
 const _hl_types = Dict{Symbol, Tuple}()
 
-@inline tuplejoin(x) = x
+@inline tuplejoin(x) = (x,)
 @inline tuplejoin(x::Tuple, y::Tuple) = (x..., y...)
 @inline tuplejoin(x::Tuple, y) = (x..., y)
 @inline tuplejoin(x, y::Tuple) = (x, y...)
-@inline tuplejoin(x,y) = (x,y)
-@inline tuplejoin(x, y, z...) = (x..., tuplejoin(y, z...)...)
+@inline tuplejoin(x, y) = (x,y)
+@inline tuplejoin(x::Tuple, y, z...) = (x..., tuplejoin(y, z...)...)
+@inline tuplejoin(x, y, z...) = (x, tuplejoin(y, z...)...)
 
 function maketypesconcrete(expression)
     for (i,arg) in enumerate(expression.args)
