@@ -1,6 +1,6 @@
 module HighLevelTypes
 
-export @hl, @perf_hl, tuplejoin
+export @hl, @concretify, tuplejoin
 
 const _hl_types = Dict{Symbol, Tuple}()
 
@@ -15,8 +15,8 @@ const _hl_types = Dict{Symbol, Tuple}()
 function maketypesconcrete(expression)
     for (i,arg) in enumerate(expression.args)
         if isa(arg, Symbol) 
-            if haskey(_hl_types, arg)
-                expression.args[i] = Symbol("_", arg)
+            if haskey(_hl_types, arg)                
+                expression.args[i] = Symbol("_", arg)                
             end
         elseif :args in fieldnames(arg)
             maketypesconcrete(arg)
@@ -24,19 +24,17 @@ function maketypesconcrete(expression)
     end
 end
 
-#uses abstract types of attribute fields
+#creates a highlevel type: uses abstract types of attribute fields
 macro hl(typeexpr::Expr)
     @assert typeexpr.head == :type    
     mutable, nameblock, args = typeexpr.args                        
     createhltype(nameblock, args)           
 end
 
-#uses concrete types of attribute fields
-macro perf_hl(typeexpr::Expr)
-    @assert typeexpr.head == :type    
-    mutable, nameblock, args = typeexpr.args    
-    maketypesconcrete(args)     
-    createhltype(nameblock, args)           
+#uses concrete types for all highlevel types
+macro concretify(expr::Expr)  
+    maketypesconcrete(expr)
+    esc(expr)
 end
 
 

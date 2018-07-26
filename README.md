@@ -10,7 +10,8 @@ As a high level language, Julia deserves a high level type. doesn't it?
 
 ## What is a high level type ?
 
-A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. Automatically, Function arguments will be using the abstract types, while field types and instantiations will use the concrete types.
+A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. By default, the concrete type 
+will be only used for instantiation.
 
 ```julia
 @hl type Person
@@ -41,8 +42,38 @@ alice.language # returns "Julia"
 sumsalaries(bob, alice) #returns 25000
 ```
 
-## How does this work on the low level?
+However this is not the best choice in term for performance-critical code.
+using abstract types instead of concrete types may increase the running time.
+Therefore the package provides the macro @concretify which one can apply
+on a block to use only the concrete type for all high level types.
 
-An abstract type may have a set of attributes attached to it. Every time an abstract type is defined a concrete type is also defined. The latter includes all fields that were attached to the abstract type or any of its parents.
+````
+vec1 = Vector{Developer}()
+push!(vec, bob) # OK
+push!(vec, alice) # OK
 
-The code of this package is highly inspired by ConcreteAbstractions.jl
+@concretify vec2 = Vector{Developer}()
+push!(vec2, bob) # OK
+push!(vec2, alice) # throws MethodError (wrong concrete type for alice)
+````
+
+In particular, @concretify can be used to create concrete types.
+
+````
+@hl type Job
+    nb_hours::Int
+    assigned_dev::Developer
+end
+
+ConcreteJob(10, bob) # OK 
+ConcreteJob(100, alice)) # OK
+
+@concretify @hl type ConcreteJob
+    nb_hours::Int
+    assigned_dev::Developer
+end
+
+ConcreteJob(10, bob) # OK
+ConcreteJob(100, alice)) # throws MethodError (wrong concrete type for alice)
+````
+

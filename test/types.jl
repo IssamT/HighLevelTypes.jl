@@ -20,7 +20,7 @@ end
     assigned_dev::Developer
 end
 
-@perf_hl type ConcreteJob
+@concretify @hl type ConcreteJob
     nb_hours::Int
     assigned_dev::Developer
 end
