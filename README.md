@@ -10,8 +10,7 @@ As a high level language, Julia deserves a high level type. doesn't it?
 
 ## What is a high level type ?
 
-A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. By default, the concrete type 
-will be only used for instantiation.
+A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. By default, the concrete type will be only used for instantiation.
 
 ```julia
 @hl type Person
@@ -42,7 +41,9 @@ alice.language # returns "Julia"
 sumsalaries(bob, alice) #returns 25000
 ```
 
-However, this is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro `@concretify` which one can apply on a block to use only the concrete type for all high level types within that block.
+## How about performance ?
+
+This is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro `@concretify` which can applied on a block to use only the concrete types for all highlevel types within that block.
 
 ```julia
 vec1 = Vector{Developer}()
