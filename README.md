@@ -43,7 +43,7 @@ sumsalaries(bob, alice) #returns 25000
 
 ## How about performance ?
 
-This is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro `@concretify` which can applied on a block to use only the concrete types for all highlevel types within that block.
+This is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro `@concretify` which can be applied on a block to use only the concrete types for all high level types within that block.
 
 ```julia
 vec1 = Vector{Developer}()
@@ -63,8 +63,8 @@ In particular, `@concretify` can be used to create concrete types.
     assigned_dev::Developer
 end
 
-ConcreteJob(10, bob) # OK 
-ConcreteJob(100, alice)) # OK
+Job(10, bob) # OK 
+Job(100, alice)) # OK
 
 @concretify @hl type ConcreteJob
     nb_hours::Int
