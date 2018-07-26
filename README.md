@@ -42,7 +42,7 @@ alice.language # returns "Julia"
 sumsalaries(bob, alice) #returns 25000
 ```
 
-However, this is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro @concretify which one can apply on a block to use only the concrete type for all high level types within that block.
+However, this is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro `@concretify` which one can apply on a block to use only the concrete type for all high level types within that block.
 
 ```julia
 vec1 = Vector{Developer}()
@@ -54,7 +54,7 @@ push!(vec2, bob) # OK
 push!(vec2, alice) # throws MethodError (wrong concrete type for alice)
 ````
 
-In particular, @concretify can be used to create concrete types.
+In particular, `@concretify` can be used to create concrete types.
 
 ```julia
 @hl type Job
