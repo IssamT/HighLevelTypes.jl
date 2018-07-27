@@ -75,11 +75,11 @@ ConcreteJob(10, bob) # OK
 ConcreteJob(100, alice)) # throws MethodError (wrong concrete type for alice)
 ````
 
-# Current limitations
+## Current limitations
 
 - A type name can not start with an underscore.
 - A high level type can not have a tuple as its field (will be fixed soon).
 
-# Acknowledgment
+## Acknowledgment
 
 This package was inspired by ConcreteAbstractions.jl
