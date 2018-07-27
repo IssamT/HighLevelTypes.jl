@@ -69,7 +69,7 @@ In particular, `@concretify` can be used to create concrete types.
 end
 
 Job(10, bob) # OK 
-Job(100, alice)) # OK
+Job(100, alice) # OK
 
 @concretify @hl type ConcreteJob
     nb_hours::Int
@@ -77,7 +77,7 @@ Job(100, alice)) # OK
 end
 
 ConcreteJob(10, bob) # OK
-ConcreteJob(100, alice)) # throws MethodError (wrong concrete type for alice)
+ConcreteJob(100, alice) # throws MethodError (wrong concrete type for alice)
 ````
 
 ## Current limitations
