@@ -1,4 +1,9 @@
+
 # HighLevelTypes
+
+[![Build Status](https://travis-ci.org/ResourceMind/HighLevelTypes.jl.svg?branch=master)](https://travis-ci.org/ResourceMind/HighLevelTypes.jl)
+[![codecov](https://codecov.io/gh/ResourceMind/HighLevelTypes.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ResourceMind/HighLevelTypes.jl)
+[![Join the chat at https://gitter.im/realopt/Scanner.jl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ResourceMind/HighLevelTypes.jl)
 
 The goal of HighLevelTypes.jl is to relieve the user from having to answer the question that we often face. Should this be a concrete or abstract type? This question is important because both have their own limitations.
 
