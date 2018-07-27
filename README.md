@@ -10,8 +10,7 @@ As a high level language, Julia deserves a high level type. doesn't it?
 
 ## What is a high level type ?
 
-A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. By default, the concrete type 
-will be only used for instantiation.
+A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. By default, the concrete type will be only used for instantiation.
 
 ```julia
 @hl type Person
@@ -42,12 +41,11 @@ alice.language # returns "Julia"
 sumsalaries(bob, alice) #returns 25000
 ```
 
-However this is not the best choice in term for performance-critical code.
-using abstract types instead of concrete types may increase the running time.
-Therefore the package provides the macro @concretify which one can apply
-on a block to use only the concrete type for all high level types.
+## How about performance ?
 
-````
+This is not the best choice for performance-critical code. Using abstract types instead of concrete types may increase the running time. Therefore the package provides the macro `@concretify` which can be applied on a block to use only the concrete types for all high level types within that block.
+
+```julia
 vec1 = Vector{Developer}()
 push!(vec, bob) # OK
 push!(vec, alice) # OK
@@ -57,16 +55,16 @@ push!(vec2, bob) # OK
 push!(vec2, alice) # throws MethodError (wrong concrete type for alice)
 ````
 
-In particular, @concretify can be used to create concrete types.
+In particular, `@concretify` can be used to create concrete types.
 
-````
+```julia
 @hl type Job
     nb_hours::Int
     assigned_dev::Developer
 end
 
-ConcreteJob(10, bob) # OK 
-ConcreteJob(100, alice)) # OK
+Job(10, bob) # OK 
+Job(100, alice)) # OK
 
 @concretify @hl type ConcreteJob
     nb_hours::Int
@@ -77,3 +75,11 @@ ConcreteJob(10, bob) # OK
 ConcreteJob(100, alice)) # throws MethodError (wrong concrete type for alice)
 ````
 
+## Current limitations
+
+- A type name can not start with an underscore.
+- A high level type can not have a tuple as its field (will be fixed soon).
+
+## Acknowledgment
+
+This package was inspired by ConcreteAbstractions.jl
