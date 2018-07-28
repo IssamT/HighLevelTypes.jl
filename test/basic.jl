@@ -1,8 +1,3 @@
-workspace()
-
-using HighLevelTypes, Base.Test
-
-include("types.jl")
 
 @testset "Basic Tests" begin
     bob = Developer("Bob", 10000)

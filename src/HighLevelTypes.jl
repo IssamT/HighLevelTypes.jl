@@ -25,10 +25,9 @@ function maketypesconcrete(expression)
 end
 
 #creates a highlevel type: uses abstract types of attribute fields
-macro hl(typeexpr::Expr)
-    @assert typeexpr.head == :type    
-    mutable, nameblock, args = typeexpr.args                        
-    createhltype(nameblock, args)           
+macro hl(typeexpr::Expr)   
+    mutable, nameblock, args = typeexpr.args
+    createhltype(mutable, nameblock, args)           
 end
 
 #uses concrete types for all highlevel types
@@ -39,7 +38,7 @@ end
 
 
 
-function createhltype(nameblock, args)
+function createhltype(mutable, nameblock, args)
     if !isa(nameblock, Symbol) && nameblock.head == :<:        
         parentname = nameblock.args[2]
         nameblock = nameblock.args[1]        
@@ -64,14 +63,27 @@ function createhltype(nameblock, args)
     tname = Symbol(:_, name)
     tname = :($tname{})
     append!(tname.args, _hl_types[name][1]) 
-    code = quote
-        $acode
-        type $tname <: $name
-            $(_hl_types[name][2].args...)
-        end
+    constrcode = quote 
         $(Symbol(name,"Builder"))(args...) = args
         $name(args...) = $(Symbol("_",name))($(Symbol(name,"Builder"))(args...)...)
-        # $name(args...) = $(Symbol("_",name))(args...)
+    end
+        
+    if mutable          
+        code = quote
+            $acode
+            mutable struct $tname <: $name
+                $(_hl_types[name][2].args...)
+            end
+            $constrcode
+        end
+    else
+        code = quote
+            $acode
+            struct $tname <: $name
+                $(_hl_types[name][2].args...)
+            end
+            $constrcode
+        end
     end 
     # @show code
     esc(code) 

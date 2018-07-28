@@ -18,15 +18,15 @@ As a high level language, Julia deserves a high level type. doesn't it?
 A high level type is an abstraction for two underlying types: one is abstract and one is concrete. The user only defines high level types. By default, the concrete type will be only used for instantiation.
 
 ```julia
-@hl type Person
+@hl struct Person
     name::String
 end
     
-@hl type Developer <: Person
+@hl struct Developer <: Person
     salary::Int32
 end
 
-@hl type SepecializedDeveloper <: Developer
+@hl struct SepecializedDeveloper <: Developer
     language::String
 end
 
@@ -63,7 +63,7 @@ push!(vec2, alice) # throws MethodError (wrong concrete type for alice)
 In particular, `@concretify` can be used to create concrete types.
 
 ```julia
-@hl type Job
+@hl struct Job
     nb_hours::Int
     assigned_dev::Developer
 end
@@ -71,7 +71,7 @@ end
 Job(10, bob) # OK 
 Job(100, alice) # OK
 
-@concretify @hl type ConcreteJob
+@concretify @hl struct ConcreteJob
     nb_hours::Int
     assigned_dev::Developer
 end

@@ -1,14 +1,9 @@
-workspace()
-
-using HighLevelTypes, Base.Test
-
-include("types.jl")
-
-DeveloperBuilder(name::String) = (name, 700)
-
-SpecializedDeveloperBuilder(name::String, language::String) = tuplejoin(DeveloperBuilder(name), language)
 
 @testset "Constructors" begin        
+    DeveloperBuilder(name::String) = (name, 700)
+    SpecializedDeveloperBuilder(name::String, language::String) = 
+            tuplejoin(DeveloperBuilder(name), language)
+
     junior = Developer("Junior") 
     
     @test junior.name == "Junior"    
