@@ -1,9 +1,8 @@
-
-@testset "Constructors" begin        
-    DeveloperBuilder(name::String) = (name, 700)
-    SpecializedDeveloperBuilder(name::String, language::String) = 
-            tuplejoin(DeveloperBuilder(name), language)
-
+DeveloperBuilder(name::String) = (name, 700)
+SpecializedDeveloperBuilder(name::String, language::String) = 
+        tuplejoin(DeveloperBuilder(name), language)
+        
+@testset "Constructors" begin    
     junior = Developer("Junior") 
     
     @test junior.name == "Junior"    

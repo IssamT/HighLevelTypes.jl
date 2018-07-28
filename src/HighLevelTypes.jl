@@ -18,7 +18,7 @@ function maketypesconcrete(expression)
             if haskey(_hl_types, arg)                
                 expression.args[i] = Symbol("_", arg)                
             end
-        elseif :args in fieldnames(arg)
+        elseif :args in fieldnames(typeof(arg))
             maketypesconcrete(arg)
         end
     end
@@ -84,8 +84,7 @@ function createhltype(mutable, nameblock, args)
             end
             $constrcode
         end
-    end 
-    # @show code
+    end
     esc(code) 
 end
  
